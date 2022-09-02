@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\M0b3System.Entity\M0b3System.Entity.csproj" />
     <ProjectReference Include="..\M0b3System.Infrastructure\M0b3System.Infrastructure.csproj" />
   </ItemGroup>
 
