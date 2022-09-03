@@ -8,5 +8,6 @@ namespace M0b3System.Entity
 {
     public class SysMenu : BaseEntity<long>
     {
+        public string MenuName { get; set; } = string.Empty;
     }
 }
