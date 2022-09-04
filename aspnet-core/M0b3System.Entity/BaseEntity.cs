@@ -15,27 +15,27 @@ namespace M0b3System.Entity
         /// </summary>
         [Description("創建者")]
         [Column("CreatedUser")]
-        public long? CreatedUser { get; set; }
+        public long CreatedUser { get; set; }
 
         /// <summary>
         /// 建立時間
         /// </summary>
         [Description("建立時間")]
         [Column("CreatedTime")]
-        public DateTime? CreatedTime { get; set; }
+        public DateTime CreatedTime { get; set; }
 
         /// <summary>
         /// 最後更新者
         /// </summary>
         [Description("最後更新者")]
         [Column("UpdatedUser")]
-        public long? UpdatedUser { get; set; }
+        public long UpdatedUser { get; set; }
 
         /// <summary>
         /// 更新時間
         /// </summary>
         [Description("更新時間")]
         [Column("UpdatedTime")]
-        public DateTime? UpdatedTime { get; set; }
+        public DateTime UpdatedTime { get; set; }
     }
 }
