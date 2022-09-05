@@ -4,6 +4,11 @@ using M0b3System.Service.Contract;
 using Microsoft.AspNetCore.Authorization;
 using M0b3System.Dto.Model;
 using M0b3System.Entity.Enum;
+using System.Security.Claims;
+using M0b3System.API.Infrustures;
+using Microsoft.Extensions.Options;
+using M0b3System.Infrastructure.Common;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace M0b3System.API.Controllers
 {
@@ -12,9 +17,12 @@ namespace M0b3System.API.Controllers
     public class AccountController : ContextController
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly JwtSecret _jwtSecret;
+
+        public AccountController(IAccountService accountService, IOptions<JwtSecret> jwtSecret)
         {
             _accountService = accountService;
+            _jwtSecret = jwtSecret.Value;
         }
 
         [AllowAnonymous]
@@ -22,17 +30,47 @@ namespace M0b3System.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(AccountLogin model)
         {
-            var result = await _accountService.PasswordSignInAsync(model.UserName, model.Password);
+            var (singInSttatus, userContext) = await _accountService.PasswordSignInAsync(model.UserName, model.Password);
+            string ErrorMsg = "未知錯誤";
 
-            switch (result)
+            switch (singInSttatus)
             {
                 case SignInStatus.Success:
-                    break;
+
+                    var claims = new List<Claim>();
+                    claims.Add(new Claim("Account", userContext.Account));
+                    claims.Add(new Claim("UserName", userContext.UserName));
+                    claims.Add(new Claim("Email", userContext.Email));
+                    claims.Add(new Claim("Identy", userContext.Id.ToString()));
+
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    claims.Add(new Claim(ClaimTypes.Role, "Normal"));
+
+                    claims.Add(new Claim("Permissions", "M0b3.User.Create"));
+                    claims.Add(new Claim("Permissions", "M0b3.User.Update"));
+                    claims.Add(new Claim("Permissions", "M0b3.User.Delete"));
+
+                    var token = JwtExtend.GetJwtToken(
+                        Account: userContext.Account,
+                        JwtKey: _jwtSecret.Key,
+                        Issuer: _jwtSecret.Issuer,
+                        Audience: _jwtSecret.Audience,
+                        Expiration: TimeSpan.FromMinutes(60),
+                        AdditionalClaims: claims.ToArray()
+                        );
+
+                    return new JsonResult(Success(new
+                    {
+                        Token = new JwtSecurityTokenHandler().WriteToken(token)
+                    }));
+
                 case SignInStatus.Failure:
+                    break;
+                case SignInStatus.LockedOut:
                     break;
             }
 
-            return new JsonResult(Success());
+            return new JsonResult(Failed(ErrorMsg));
         }
     }
 }

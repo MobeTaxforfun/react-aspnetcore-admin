@@ -15,6 +15,7 @@
     <ProjectReference Include="..\M0b3System.Dto\M0b3System.Dto.csproj" />
     <ProjectReference Include="..\M0b3System.Infrastructure\M0b3System.Infrastructure.csproj" />
     <ProjectReference Include="..\M0b3System.Service.Contract\M0b3System.Service.Contract.csproj" />
+    <ProjectReference Include="..\M0b3System.Service\M0b3System.Service.csproj" />
   </ItemGroup>
 
 </Project>

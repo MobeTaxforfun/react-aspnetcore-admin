@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace M0b3System.Dto.Dto
 {
-    internal class SysUserDto
+    public class SysUserDto
     {
+        public long Id { get; set; }
+        public string Account { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public long RoleId { get; set; }
+        public string Role { get; set; } = string.Empty;
     }
 }

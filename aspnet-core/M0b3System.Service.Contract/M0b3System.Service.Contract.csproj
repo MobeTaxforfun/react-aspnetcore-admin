@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\M0b3System.Dto\M0b3System.Dto.csproj" />
     <ProjectReference Include="..\M0b3System.Entity\M0b3System.Entity.csproj" />
   </ItemGroup>
 

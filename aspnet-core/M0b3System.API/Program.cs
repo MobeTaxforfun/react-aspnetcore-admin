@@ -1,6 +1,9 @@
 using M0b3System.Infrastructure.Common;
+using M0b3System.Service;
+using M0b3System.Service.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Encodings.Web;
 
 namespace M0b3System.API
 {
@@ -11,58 +14,12 @@ namespace M0b3System.API
             var builder = WebApplication.CreateBuilder(args);
             // Add Configuration 
             ConfigurationManager configuration = builder.Configuration;
-
-            // Add services to the container.
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-
-            // Add Jwt Config 
-            builder.Services.Configure<JwtSecret>(configuration.GetSection("JwtSecret"));
-            JwtSecret jwtSecret = configuration.GetSection("JwtSecret").Get<JwtSecret>();
-
-            // Add AddAuthenticate (Jwt)
-            builder.Services.AddAuthentication(option =>
-            {
-                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(option =>
-            {
-                option.TokenValidationParameters = new TokenValidationParameters
-                { 
-                
-                };
-
-                option.Events = new JwtBearerEvents
-                {
-
-                };
-            });
+            var startup = new Startup(configuration);
+            startup.ConfigureServices(builder.Services);
 
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            //app.MapControllers();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
+            // Build Middleware
+            startup.Configure(app, builder.Environment);
             app.Run();
         }
     }
