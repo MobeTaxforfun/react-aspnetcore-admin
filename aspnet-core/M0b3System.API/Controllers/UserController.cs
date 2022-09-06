@@ -11,5 +11,11 @@ namespace M0b3System.API.Controllers
         {
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUser()
+        {
+            return new JsonResult(Success());
+        }
     }
 }

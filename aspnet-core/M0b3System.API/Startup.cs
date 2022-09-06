@@ -3,6 +3,7 @@ using M0b3System.Service;
 using M0b3System.Service.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -32,7 +33,32 @@ namespace M0b3System.API
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(option =>
+            {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
 
 
             // Add Jwt Config 
@@ -55,10 +81,12 @@ namespace M0b3System.API
                     ValidIssuer = jwtSecret.Issuer,
                     ValidateAudience = true,
                     ValidAudience = jwtSecret.Audience,
-                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret.Key)),
-                    ClockSkew = TimeSpan.Zero
+
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(600),
+                    RequireExpirationTime = true
                 };
 
                 option.Events = new JwtBearerEvents
@@ -81,12 +109,14 @@ namespace M0b3System.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             //app.MapControllers();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                //Endpoints 全局驗證
+                endpoints.MapControllers().RequireAuthorization(); ;
             });
         }
     }

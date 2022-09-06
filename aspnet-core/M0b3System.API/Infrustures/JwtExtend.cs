@@ -12,7 +12,7 @@ namespace M0b3System.API.Infrustures
             string JwtKey,
             string Issuer,
             string Audience,
-            TimeSpan Expiration,
+            int Expiration,
             Claim[] AdditionalClaims = null)
         {
             var claims = new[]{
@@ -33,7 +33,7 @@ namespace M0b3System.API.Infrustures
                    issuer: Issuer,
                    audience: Audience,
                    notBefore: DateTime.Now,
-                   expires: DateTime.Now.AddHours(2),
+                   expires: DateTime.Now.AddSeconds(Expiration),
                    claims: claims,
                    signingCredentials: creds);
         }

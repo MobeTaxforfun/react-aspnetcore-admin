@@ -26,7 +26,7 @@ namespace M0b3System.API.Controllers
         }
 
         [AllowAnonymous]
-        [Route("login")]
+        [Route("Login")]
         [HttpPost]
         public async Task<IActionResult> Login(AccountLogin model)
         {
@@ -55,7 +55,7 @@ namespace M0b3System.API.Controllers
                         JwtKey: _jwtSecret.Key,
                         Issuer: _jwtSecret.Issuer,
                         Audience: _jwtSecret.Audience,
-                        Expiration: TimeSpan.FromMinutes(60),
+                        Expiration: 600,
                         AdditionalClaims: claims.ToArray()
                         );
 

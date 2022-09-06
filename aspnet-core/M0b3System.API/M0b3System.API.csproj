@@ -18,4 +18,8 @@
     <ProjectReference Include="..\M0b3System.Service\M0b3System.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrustures\Attribute\" />
+  </ItemGroup>
+
 </Project>
