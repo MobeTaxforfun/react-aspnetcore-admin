@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using M0b3System.API.Common.Instance;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace M0b3System.API.Controllers
@@ -7,14 +8,17 @@ namespace M0b3System.API.Controllers
     [ApiController]
     public class UserController : BasicApiController
     {
-        public UserController()
-        {
+        private readonly IAspNetUser _aspNetUser;
 
+        public UserController(IAspNetUser aspNetUser)
+        {
+            _aspNetUser = aspNetUser;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
+            var test = _aspNetUser.UserId;
             return new JsonResult(Success());
         }
     }

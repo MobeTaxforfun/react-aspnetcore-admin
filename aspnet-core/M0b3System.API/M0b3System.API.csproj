@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrustures\Attribute\" />
+    <Folder Include="Common\Attribute\" />
   </ItemGroup>
 
 </Project>

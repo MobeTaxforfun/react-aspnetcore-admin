@@ -1,9 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using M0b3System.API.Common.Instance;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace M0b3System.API.Infrustures
+namespace M0b3System.API.Common.Auth
 {
     public class JwtExtend
     {
@@ -36,6 +38,19 @@ namespace M0b3System.API.Infrustures
                    expires: DateTime.Now.AddSeconds(Expiration),
                    claims: claims,
                    signingCredentials: creds);
+        }
+
+        public static Func<TokenValidatedContext, Task> CusJwtOnTokenValidated()
+        {
+            return context =>
+            {
+                var aspNetUser = context.HttpContext.RequestServices.GetService<IAspNetUser>();
+                var claims = context.Principal.Claims;
+
+                aspNetUser.UserId = 1;
+
+                return Task.CompletedTask;
+            };
         }
     }
 }

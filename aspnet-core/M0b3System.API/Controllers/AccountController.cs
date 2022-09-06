@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using M0b3System.Dto.Model;
 using M0b3System.Entity.Enum;
 using System.Security.Claims;
-using M0b3System.API.Infrustures;
 using Microsoft.Extensions.Options;
 using M0b3System.Infrastructure.Common;
 using System.IdentityModel.Tokens.Jwt;
+using M0b3System.API.Common.Auth;
 
 namespace M0b3System.API.Controllers
 {

@@ -1,4 +1,6 @@
-﻿using M0b3System.Infrastructure.Common;
+﻿using M0b3System.API.Common.Auth;
+using M0b3System.API.Common.Instance;
+using M0b3System.Infrastructure.Common;
 using M0b3System.Service;
 using M0b3System.Service.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +24,8 @@ namespace M0b3System.API
         {
             // Add services to the container.
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAspNetUser, AspNetUser>();
+
             // Add Controller And SetJsonFormat 1.依照原類型回傳 2.自定義轉碼 3.統一化日期格式
             services.AddControllers()
                 .AddJsonOptions(option =>
@@ -91,7 +95,7 @@ namespace M0b3System.API
 
                 option.Events = new JwtBearerEvents
                 {
-
+                    OnTokenValidated = JwtExtend.CusJwtOnTokenValidated()
                 };
             });
         }
