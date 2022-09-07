@@ -1,4 +1,5 @@
-﻿using M0b3System.API.Common.Instance;
+﻿using M0b3System.API.Common.Auth;
+using M0b3System.API.Common.Instance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace M0b3System.API.Controllers
         }
 
         [HttpGet]
+        [RequiresPermission("test")]
         public async Task<IActionResult> GetUser()
         {
             var test = _aspNetUser.UserId;
