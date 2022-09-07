@@ -9,6 +9,16 @@ namespace M0b3System.API.Common.Auth
 {
     public class JwtExtend
     {
+        /// <summary>
+        /// 創建 JWT Token
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="JwtKey"></param>
+        /// <param name="Issuer"></param>
+        /// <param name="Audience"></param>
+        /// <param name="Expiration"></param>
+        /// <param name="AdditionalClaims"></param>
+        /// <returns></returns>
         public static JwtSecurityToken GetJwtToken(
             string Account,
             string JwtKey,
@@ -40,6 +50,10 @@ namespace M0b3System.API.Common.Auth
                    signingCredentials: creds);
         }
 
+        /// <summary>
+        /// JWT 認證時自動帶入使用者資訊上下文
+        /// </summary>
+        /// <returns></returns>
         public static Func<TokenValidatedContext, Task> CusJwtOnTokenValidated()
         {
             return context =>

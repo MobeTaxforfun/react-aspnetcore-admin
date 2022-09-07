@@ -4,6 +4,7 @@ using M0b3System.Infrastructure.Common;
 using M0b3System.Service;
 using M0b3System.Service.Contract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -24,7 +25,7 @@ namespace M0b3System.API
         {
             // Add services to the container.
             services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<IAspNetUser, AspNetUser>();
+            services.AddScoped<IAspNetUser, AspNetUser>();
 
             // Add Controller And SetJsonFormat 1.依照原類型回傳 2.自定義轉碼 3.統一化日期格式
             services.AddControllers()
@@ -92,12 +93,15 @@ namespace M0b3System.API
                     ClockSkew = TimeSpan.FromSeconds(600),
                     RequireExpirationTime = true
                 };
-
+                //驗證成功之後處理
                 option.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = JwtExtend.CusJwtOnTokenValidated()
                 };
             });
+
+            // Add Custom AuthorizationHandler 自定義授權的部分
+            services.AddScoped<IAuthorizationHandler, PermissionsAuthorizationHandler>();
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
