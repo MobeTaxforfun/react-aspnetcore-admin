@@ -23,5 +23,10 @@ namespace M0b3System.API.Controllers
             var test = _aspNetUser.UserId;
             return new JsonResult(Success());
         }
+
+        public async Task<IActionResult> GetUser(long Id)
+        {
+            return new JsonResult(Success());
+        }
     }
 }
