@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace M0b3System.Dto.Model
+namespace M0b3System.Dto.Dto
 {
-    internal class AccountModel
+    internal class AccountDto
     {
     }
 

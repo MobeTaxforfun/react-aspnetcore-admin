@@ -12,9 +12,9 @@ namespace M0b3System.Service
     public class AccountService : IAccountService
     {
 
-        public async Task<(SignInStatus, SysUserDto?)> PasswordSignInAsync(string UserName, string Password)
+        public async Task<(SignInStatus, UserDto?)> PasswordSignInAsync(string UserName, string Password)
         {
-            return new(SignInStatus.Success, new SysUserDto
+            return new(SignInStatus.Success, new UserDto
             {
                 Id = 1,
                 Account = "Test",

@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using M0b3System.Service.Contract;
 using Microsoft.AspNetCore.Authorization;
-using M0b3System.Dto.Model;
 using M0b3System.Entity.Enum;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using M0b3System.Infrastructure.Common;
 using System.IdentityModel.Tokens.Jwt;
 using M0b3System.API.Common.Auth;
+using M0b3System.Dto.Dto;
 
 namespace M0b3System.API.Controllers
 {

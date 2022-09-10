@@ -10,6 +10,6 @@ namespace M0b3System.Service.Contract
 {
     public interface IAccountService : IService
     {
-        public Task<(SignInStatus, SysUserDto?)> PasswordSignInAsync(string UserName, string Password);
+        public Task<(SignInStatus, UserDto?)> PasswordSignInAsync(string UserName, string Password);
     }
 }

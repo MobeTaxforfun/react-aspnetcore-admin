@@ -12,6 +12,8 @@ namespace M0b3System.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            
             // Add Configuration 
             ConfigurationManager configuration = builder.Configuration;
             var startup = new Startup(configuration);
