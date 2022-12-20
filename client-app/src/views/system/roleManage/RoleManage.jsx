@@ -113,10 +113,10 @@ const RoleManage = () => {
                         alignItems="center"
                     >
                         <TableHelper>
-                            <RoleCreateModal></RoleCreateModal>
-                            <Button variant="contained" size="small" color="success" startIcon={<Add />} title={"新增"}>
+                            <RoleCreateModal modallabel="新增" size="small" color="success" startIcon={<Add />}></RoleCreateModal>
+                            {/* <Button variant="contained" size="small" color="success" startIcon={<Add />} title={"新增"}>
                                 新增
-                            </Button>
+                            </Button> */}
                             {/* <Button variant="contained" size="small" color="primary" startIcon={<Edit />}>
                                 修改
                             </Button>
@@ -165,12 +165,8 @@ const RoleManage = () => {
                                             <StyledTableCell>{row.state}</StyledTableCell>
                                             <StyledTableCell>{row.createTime}</StyledTableCell>
                                             <StyledTableCell align="right">
-                                                <Button variant="contained" size="small" color="primary" startIcon={<Edit />} sx={{ mx: 0.5 }}>
-                                                    編輯
-                                                </Button>
-                                                <Button variant="contained" size="small" color="error" startIcon={<Delete />} sx={{ mx: 0.5 }}>
-                                                    刪除
-                                                </Button>
+                                                <RoleCreateModal modallabel="編輯" size="small" color="primary" startIcon={<Edit />} sx={{ mx: 0.5 }}></RoleCreateModal>
+                                                <RoleCreateModal modallabel="刪除" size="small" color="error" startIcon={<Delete />} sx={{ mx: 0.5 }}></RoleCreateModal>
                                             </StyledTableCell>
                                         </StyledTableRow>
                                     ))}
