@@ -1,19 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import IconButton from '@mui/material/IconButton';
 
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
 import Pagination from '@mui/material/Pagination';
 
 import Stack from '@mui/material/Stack';
@@ -24,36 +19,22 @@ import {
     Add,
     Edit,
     Delete,
-    GetApp
+    ChromeReaderMode,
+    Autorenew
 
 } from '@mui/icons-material';
 
 import PageCollapse from '../../../components/Collapse/PageCollapse'
-import SearchList from '../../../components/Table/SearchList';
-import TableHelper from '../../../components/Table/TableHelper';
+import SearchList from '../../../components/page/TablePage/SearchList';
+import TableHelper from '../../../components/page/TablePage/TableHelper';
+import EmptyButton from '../../../components/Appbutton/EmptyButton';
+import StyledTableCell from '../../../components/page/TablePage/StyledTableCell';
+import StyledTableRow from '../../../components/page/TablePage/StyledTableRow';
+import RoleCreateModal from './RoleCreateModal';
 
 const RoleManage = () => {
 
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            backgroundColor: "#a3bbd9",
-            color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-        },
-    }));
-
-    const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
-        },
-        // hide last border
-        '&:last-child td, &:last-child th': {
-            border: 0,
-        },
-    }));
-
+    //模擬資料
     function createData(name, code, sort, state, createTime) {
         return { name, code, sort, state, createTime };
     }
@@ -63,6 +44,14 @@ const RoleManage = () => {
         createData('管理員', 'Admin', 2, '啟用', '2022/12/10'),
         createData('一般使用者', 'User', 3, '啟用', '2022/12/10'),
     ];
+
+    // Hook 初始化
+    const [listedRole, setListedRole] = useState(rows);
+
+    // Modal 方法
+    const CreateRoleToListed = (item) => {
+        setListedRole([...rows, item]);
+    }
 
     return (
         <Grid container spacing={2}>
@@ -89,15 +78,24 @@ const RoleManage = () => {
                                 </li>
                                 <li className="select-time">
                                     <label>創建時間： </label>
-                                    <input type="date" className="form-control form-control-sm" id="startTime" placeholder="開始時間" name="params[beginTime]" lay-key="1" />
+                                    <input type="date"
+                                        className="form-control form-control-sm"
+                                        id="startTime"
+                                        placeholder="開始時間"
+                                        name="params[beginTime]" lay-key="1" />
                                     <span>{'\u00A0'}-{'\u00A0'}</span>
-                                    <input type="date" className="form-control form-control-sm" id="endTime" placeholder="結束時間" name="params[endTime]" lay-key="2" />
+                                    <input type="date"
+                                        className="form-control form-control-sm"
+                                        id="endTime"
+                                        placeholder="結束時間"
+                                        name="params[endTime]"
+                                        lay-key="2" />
                                 </li>
                                 <li>
-                                    <Button variant="contained" size="small" color="primary" sx={{ mx: 0.5 }} startIcon={<Search />}>
+                                    <Button variant="contained" size="small" color="primary" startIcon={<Search />} sx={{ mx: 0.5 }}>
                                         搜尋
                                     </Button>
-                                    <Button variant="contained" size="small" color="warning" sx={{ mx: 0.5 }} startIcon={<FindReplace />}>
+                                    <Button variant="contained" size="small" color="warning" startIcon={<FindReplace />} sx={{ mx: 0.5 }}>
                                         重製
                                     </Button>
                                 </li>
@@ -115,56 +113,30 @@ const RoleManage = () => {
                         alignItems="center"
                     >
                         <TableHelper>
-                            <Button variant="contained" size="small" color="success" startIcon={<Add />}>
+                            <RoleCreateModal></RoleCreateModal>
+                            <Button variant="contained" size="small" color="success" startIcon={<Add />} title={"新增"}>
                                 新增
                             </Button>
-                            <Button variant="contained" size="small" color="primary" startIcon={<Edit />}>
+                            {/* <Button variant="contained" size="small" color="primary" startIcon={<Edit />}>
                                 修改
                             </Button>
                             <Button variant="contained" size="small" color="error" startIcon={<Delete />}>
                                 刪除
-                            </Button>
+                            </Button> */}
                             <Button variant="contained" size="small" color="warning" startIcon={<Search />}>
                                 匯出
                             </Button>
                         </TableHelper>
                         <TableHelper>
-                            <IconButton aria-label="delete" sx={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 0.5,
-                                border: "1px solid",
-                                borderColor: "gray"
-                            }}>
-                                <Delete />
-                            </IconButton>
-                            <IconButton aria-label="delete" sx={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 0.5,
-                                border: "1px solid",
-                                borderColor: "gray"
-                            }}>
-                                <Delete />
-                            </IconButton>
-                            <IconButton aria-label="delete" sx={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 0.5,
-                                border: "1px solid",
-                                borderColor: "gray"
-                            }}>
-                                <Delete />
-                            </IconButton>
-                            <IconButton aria-label="delete" sx={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 0.5,
-                                border: "1px solid",
-                                borderColor: "gray"
-                            }}>
-                                <Delete />
-                            </IconButton>
+                            <EmptyButton title={"隱藏/顯示搜尋"}>
+                                <Search />
+                            </EmptyButton>
+                            <EmptyButton title={"重新整理列表"}>
+                                <Autorenew />
+                            </EmptyButton>
+                            <EmptyButton title={"切換列表模式"}>
+                                <ChromeReaderMode />
+                            </EmptyButton>
                         </TableHelper>
                     </Grid>
                     <Box sx={{ pt: 1, overflow: "auto" }}>
