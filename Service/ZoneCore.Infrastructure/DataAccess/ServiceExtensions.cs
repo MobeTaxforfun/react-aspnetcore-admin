@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZoneCore.Infra.DataAccess.EFCore.Context;
+using ZoneCore.Infra.DataAccess.EFCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace ZoneCore.Infra.DataAccess
 {
     public static class ServiceExtensions
     {
         /// <summary>
-        /// 注入共用的 T repository 
+        /// 注入共用的 TDbContext repository 
         /// </summary>
         /// <typeparam name="TDbContext">注入要生成 Repo 的 Dbcontext</typeparam>
         /// <param name="services"></param>
@@ -20,11 +23,16 @@ namespace ZoneCore.Infra.DataAccess
         public static IServiceCollection AddGenericRepository<TDbContext>(
             this IServiceCollection services,
             ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            where TDbContext : DbContext
         {
-            if (services == null)
+            services.Add(new ServiceDescriptor(
+            typeof(IRepository),
+            serviceProvider =>
             {
-                throw new ArgumentNullException(nameof(services));
-            }
+                TDbContext dbContext = ActivatorUtilities.CreateInstance<TDbContext>(serviceProvider);
+                return new GenericEFExecute<TDbContext>(dbContext);
+            },
+            lifetime));
 
             return services;
         }

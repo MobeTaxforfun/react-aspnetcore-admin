@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using ZoneCore.Infra.DataAccess.EFCore;
 using ZoneCore.Models.Dto;
+using ZoneCore.Models.Entity;
 using ZoneCore.Models.Model;
 using ZoneCore.Repository.Interface;
 using ZoneCore.Service.Interface;
@@ -13,14 +16,17 @@ namespace ZoneCore.Web.Controllers.System
     {
         private readonly IUserService _userService;
         private readonly ISysUserRepository _sysUserRepository;
+        private readonly IRepository _genericEF;
 
         public SysUserController(
             IUserService userService,
-            ISysUserRepository sysUserRepository
+            ISysUserRepository sysUserRepository,
+            IRepository genericEF
             )
         {
             this._userService = userService;
             this._sysUserRepository = sysUserRepository;
+            this._genericEF = genericEF;
         }
 
         /// <summary>
@@ -40,9 +46,13 @@ namespace ZoneCore.Web.Controllers.System
         /// <param name="Id">Id</param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        public IActionResult GetUser(int Id)
+        public async Task<IActionResult> GetUser(int Id)
         {
-            var users = _sysUserRepository.Select(c => c.Enable == 1);
+
+            Expression<Func<SysUser, bool>> whereCondition = x => x.Status > 0;
+
+            whereCondition = whereCondition.And(x => x.Account.Contains("test"));
+
             return Successful();
         }
 

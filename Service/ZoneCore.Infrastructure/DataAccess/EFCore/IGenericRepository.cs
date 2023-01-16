@@ -6,7 +6,7 @@ using ZoneCore.Infra.DataAccess.EFCore.Query;
 
 namespace ZoneCore.Infra.DataAccess.EFCore
 {
-    public interface IGenericRepository<TDbContext, TEntity> : IGenericEF
+    public interface IGenericRepository<TDbContext, TEntity> : IRepository
         where TDbContext : DbContext
         where TEntity : class
     {
@@ -16,6 +16,6 @@ namespace ZoneCore.Infra.DataAccess.EFCore
         Task<int> InsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
         Task<int> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task<int> UpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
-        List<TEntity> Select(Expression<Func<TEntity, bool>> whereExpression);
+        Task<List<TEntity>> ListedAsync(Expression<Func<TEntity, bool>> whereExpression);
     }
 }

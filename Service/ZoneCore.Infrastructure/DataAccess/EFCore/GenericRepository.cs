@@ -93,9 +93,9 @@ namespace ZoneCore.Infra.DataAccess.EFCore
         /// </summary>
         /// <param name="whereExpression"></param>
         /// <returns></returns>
-        public List<TEntity> Select(Expression<Func<TEntity, bool>> whereExpression)
+        public Task<List<TEntity>> ListedAsync(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return base.Select<TEntity>(whereExpression);
+            return base.ListedAsync<TEntity>();
         }
     }
 }

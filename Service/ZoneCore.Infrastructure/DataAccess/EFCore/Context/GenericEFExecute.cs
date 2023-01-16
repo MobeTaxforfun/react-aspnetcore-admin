@@ -10,7 +10,7 @@ using static Dapper.SqlMapper;
 
 namespace ZoneCore.Infra.DataAccess.EFCore.Context
 {
-    public class GenericEFExecute<TDbContext> : GenericEFQuery<TDbContext>, IGenericEFExecute, IGenericEFQuery
+    public class GenericEFExecute<TDbContext> : GenericEFQuery<TDbContext>, IRepository
         where TDbContext : DbContext
     {
         private readonly TDbContext _dbContext;
@@ -20,6 +20,33 @@ namespace ZoneCore.Infra.DataAccess.EFCore.Context
         }
 
         #region 新增的家
+
+        /// <summary>
+        /// 單數新增
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Insert<TEntity>(TEntity entity)
+            where TEntity : class
+        {
+            _dbContext.Set<TEntity>().Add(entity);
+            return _dbContext.SaveChanges();
+
+        }
+
+        /// <summary>
+        /// 複數新增
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Insert<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class
+        {
+            _dbContext.Set<TEntity>().AddRange(entities);
+            return _dbContext.SaveChanges();
+        }
 
         /// <summary>
         /// 單數新增 (NoTrack)
@@ -62,6 +89,26 @@ namespace ZoneCore.Infra.DataAccess.EFCore.Context
 
         #region 更新的家
 
+        public int Update<TEntity>(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+            where TEntity : class
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
+
+            _dbContext.Attach(entity);
+
+            if (properties.Any())
+            {
+                foreach (var property in properties)
+                {
+                    _dbContext.Entry(entity).Property(property).IsModified = true;
+                }
+            }
+            var count = _dbContext.SaveChanges();
+            _dbContext.Entry(entity).State = EntityState.Detached;
+            return count;
+        }
+
         /// <summary>
         /// 指定欄位更新方法 (NoTrack)
         /// </summary>
@@ -91,12 +138,6 @@ namespace ZoneCore.Infra.DataAccess.EFCore.Context
 
         #region 刪除的家
 
-        /// <summary>
-        /// 單數刪除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         public Task<int> DeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default)
             where TEntity : class
         {
